@@ -1,8 +1,10 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ public class Program {
 		
 		System.out.println("Folder Created successly: "+success);
 		
-		String targetFile = sourceFilePath + "\\out\\summary.csv";
+		String targetFile = sourceFolder + "\\out\\summary.csv";
 		
 		try (BufferedReader br = new BufferedReader(new FileReader (sourceFile))) {
 			String itemCsv = br.readLine();
@@ -44,11 +46,23 @@ public class Program {
 				
 				itemCsv=br.readLine();
 				
+			}	
+			
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(targetFile))) {
+				for (Product item : list) {
+					bw.write(item.getName()+","+String.format("%.2f", item.total()));
+					bw.newLine();
+				}
+				
+				System.out.println(targetFile+" CREATED!");
+			}
+			catch (IOException e) {
+				System.out.println("Error Writing File: "+ e.getMessage());
 			}
 			
 			
 		} catch (IOException e) {
-			System.out.println("Error: "+ e.getMessage());
+			System.out.println("Error reading file: "+ e.getMessage());
 		} 
 		
 
